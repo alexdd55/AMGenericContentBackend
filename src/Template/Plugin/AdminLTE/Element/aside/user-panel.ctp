@@ -4,7 +4,7 @@
         <?php echo $this->Html->image('user2-160x160.jpg', array('class' => 'img-circle', 'alt' => 'User Image')); ?>
     </div>
     <div class="pull-left info">
-        <p>Username</p>
+        <p><?= $authdata['firstname']; ?> <?= $authdata['name']; ?></p>
     </div>
 </div>
 
