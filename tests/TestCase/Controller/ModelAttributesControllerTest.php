@@ -17,15 +17,21 @@ class ModelAttributesControllerTest extends IntegrationTestCase
      */
     public $fixtures = [
         'app.model_attributes',
-        'app.contents',
-        'app.attributes_tables',
+        'app.models',
+        'app.projects',
+        'app.content',
         'app.attribute_bool',
-        'app.attribute_char',
         'app.attribute_date',
         'app.attribute_double',
         'app.attribute_file',
+        'app.attribute_char',
         'app.attribute_int',
-        'app.attribute_text'
+        'app.attribute_text',
+        'app.users',
+        'app.user_auths',
+        'app.users_projects',
+        'app.user_roles',
+        'app.attributes_tables'
     ];
 
     /**

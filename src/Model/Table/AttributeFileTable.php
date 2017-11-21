@@ -41,7 +41,7 @@ class AttributeFileTable extends AppTable
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Contents', [
+        $this->belongsTo('Content', [
             'foreignKey' => 'content_id'
         ]);
         $this->belongsTo('ModelAttributes', [
@@ -77,7 +77,7 @@ class AttributeFileTable extends AppTable
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['content_id'], 'Contents'));
+        $rules->add($rules->existsIn(['content_id'], 'Content'));
         $rules->add($rules->existsIn(['model_attribute_id'], 'ModelAttributes'));
 
         return $rules;

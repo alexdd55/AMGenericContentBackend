@@ -21,7 +21,7 @@ class AttributeBoolController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Contents', 'ModelAttributes']
+            'contain' => ['Content', 'ModelAttributes']
         ];
         $attributeBool = $this->paginate($this->AttributeBool);
 

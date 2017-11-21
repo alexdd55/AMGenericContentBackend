@@ -9,7 +9,7 @@ use Cake\Validation\Validator;
 /**
  * AttributeDouble Model
  *
- * @property \App\Model\Table\ContentsTable|\Cake\ORM\Association\BelongsTo $Contents
+ * @property \App\Model\Table\ContentTable|\Cake\ORM\Association\BelongsTo $Content
  * @property \App\Model\Table\ModelAttributesTable|\Cake\ORM\Association\BelongsTo $ModelAttributes
  *
  * @method \App\Model\Entity\AttributeDouble get($primaryKey, $options = [])
@@ -41,7 +41,7 @@ class AttributeDoubleTable extends AppTable
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Contents', [
+        $this->belongsTo('Content', [
             'foreignKey' => 'content_id'
         ]);
         $this->belongsTo('ModelAttributes', [
@@ -77,7 +77,7 @@ class AttributeDoubleTable extends AppTable
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['content_id'], 'Contents'));
+        $rules->add($rules->existsIn(['content_id'], 'Content'));
         $rules->add($rules->existsIn(['model_attribute_id'], 'ModelAttributes'));
 
         return $rules;

@@ -87,6 +87,11 @@ class AppTable extends Table {
         return $tablelist;
     }
 
+    /**
+     * @param $model_attribute_id
+     * @param $content_id
+     * @return mixed|string
+     */
     public function getContentFromTable($model_attribute_id, $content_id) {
         $results = $this->find()
             ->where([
@@ -101,6 +106,28 @@ class AppTable extends Table {
         return $results['value'];
     }
 
+    /**
+     * @param $model_attribute_id
+     * @param $content_id
+     * @return mixed|null
+     */
+    public function getContentIdFromTable($model_attribute_id, $content_id) {
+        $results = $this->find()
+            ->where([
+                'content_id' => $content_id,
+                'model_attribute_id' => $model_attribute_id
+            ])
+            ->first();
+        if($results) {
+            return $results['id'];
+        }
+        return null;
+    }
+
+    /**
+     * @param $data
+     * @return array
+     */
     public function convertArrayToKeyValue($data) {
         $newdata = [];
         foreach ($data as $d) {
@@ -109,6 +136,10 @@ class AppTable extends Table {
         return $newdata;
     }
 
+    /**
+     * @param $content_id
+     * @return array
+     */
     public function containAttributesWithContentId($content_id) {
         $tables = $this->allAttributeTables();
         $data = [];

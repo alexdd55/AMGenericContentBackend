@@ -7,8 +7,8 @@
     </li>
     <?php foreach ($projectstructure as $p) { ?>
         <li class="treeview">
-            <a href="#">
-                <i class="fa fa-stack-overflow"></i> <span><?= $p->name; ?></span>
+            <a href="#" data-project="<?= $p->name; ?>">
+                <i class="fa <?= $p->fa_icon ?>"></i> <span><?= $p->name; ?></span>
                 <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -16,7 +16,8 @@
             <ul class="treeview-menu">
                 <?php foreach ($p->models as $m) { ?>
                     <li>
-                        <a href="<?php echo $this->Url->build('/'); ?>">
+                        <a data-model="<?= $m->name; ?>"
+                           href="<?php echo $this->Url->build('/content/index/' . $p->name . '/' . $m->name); ?>">
                             <i class="fa <?= $m->fa_icon ?>"></i><?= $m->name ?>
                         </a>
                     </li>
@@ -25,18 +26,33 @@
         </li>
 
     <?php } ?>
-
+    <li class="header">ADMINISTRATION</li>
     <li class="treeview">
-        <a href="#">
-            <i class="fa fa-cog"></i> <span>Settings</span>
-            <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-            </span>
+
+    <li>
+        <a data-project="Users" href="<?php echo $this->Url->build('/users'); ?>">
+            <i class="fa fa-user"></i>
+            Users
         </a>
-        <ul class="treeview-menu">
-            <li><a href="<?php echo $this->Url->build('/users'); ?>"><i class="fa fa-user-circle"></i>Users</a></li>
-            <li><a href="<?php echo $this->Url->build('/projects'); ?>"><i class="fa fa-stack-overflow"></i>
-                    Projects</a></li>
-        </ul>
+    </li>
+    <li>
+        <a data-project="Projects" href="<?php echo $this->Url->build('/projects'); ?>">
+            <i class="fa fa-stack-overflow"></i>
+            Projects
+        </a>
+    </li>
+    <li>
+        <a data-project="Models" href="<?php echo $this->Url->build('/models'); ?>">
+            <i class="fa fa-simplybuilt"></i>
+            Models
+        </a>
+    </li>
+    <li>
+        <a data-project="model-attributes" href="<?php echo $this->Url->build('/model-attributes'); ?>">
+            <i class="fa fa-bars"></i>
+            Model Attributes
+        </a>
+    </li>
+
     </li>
 </ul>

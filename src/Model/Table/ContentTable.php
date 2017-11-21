@@ -240,6 +240,8 @@ class ContentTable extends AppTable {
 
         foreach($data as &$d) {
             $d['attribute_values']['value'] = $this->ModelAttributes->{$d['attribute_values']['table']}->getContentFromTable($d['attribute_values']['id'], $content_id);
+            $d['attribute_values']['value_id'] = $this->ModelAttributes->{$d['attribute_values']['table']}->getContentIdFromTable($d['attribute_values']['id'], $content_id);
+
         }
         return $data;
     }

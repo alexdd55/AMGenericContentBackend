@@ -7,6 +7,7 @@
  */
 
 foreach ($attributes as $attribute) {
+    //  pr($attribute);
     $val = '';
     if (isset($attribute['attribute_values'])) {
         $val = $attribute['attribute_values']['value'];
@@ -14,7 +15,8 @@ foreach ($attributes as $attribute) {
 
     $props = [
         'value' => $val,
-        'class' => 'form-control'
+        'class' => 'form-control',
+        'label' => $attribute['name']
     ];
     switch ($attribute['attribute_values']['table']) {
         case 'AttributeDate':
@@ -39,8 +41,12 @@ foreach ($attributes as $attribute) {
             $props['type'] = 'text';
             break;
     }
+    $formname = 'attributes.'.$attribute['attribute_values']['table'] . '.' . $attribute['attribute_values']['value_id'] . '.value';
+    if ($attribute['attribute_values']['value_id'] == null) {
+        $formname = 'attributes.'.$attribute['attribute_values']['table'] . '.' . $attribute['attribute_values']['id'] . '.value';
+    }
 
-    echo $this->Form->control($attribute['name'], $props);
+    echo $this->Form->control($formname, $props);
 
 }
 
