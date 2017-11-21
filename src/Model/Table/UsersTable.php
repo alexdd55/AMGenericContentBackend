@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Auth\DigestAuthenticate;
+use Cake\Event\Event;
 
 /**
  * Users Model
@@ -22,8 +25,7 @@ use Cake\Validation\Validator;
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class UsersTable extends Table
-{
+class UsersTable extends Table {
 
     /**
      * Initialize method
@@ -31,8 +33,7 @@ class UsersTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
-    {
+    public function initialize(array $config) {
         parent::initialize($config);
 
         $this->setTable('users');
@@ -57,16 +58,11 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
+    public function validationDefault(Validator $validator) {
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->boolean('active')
-            ->requirePresence('active', 'create')
-            ->notEmpty('active');
 
         $validator
             ->email('email')
@@ -78,76 +74,6 @@ class UsersTable extends Table
             ->requirePresence('password', 'create')
             ->notEmpty('password');
 
-        $validator
-            ->scalar('firstname')
-            ->allowEmpty('firstname');
-
-        $validator
-            ->scalar('name')
-            ->allowEmpty('name');
-
-        $validator
-            ->date('birthday')
-            ->allowEmpty('birthday');
-
-        $validator
-            ->integer('sex')
-            ->requirePresence('sex', 'create')
-            ->notEmpty('sex');
-
-        $validator
-            ->scalar('street')
-            ->allowEmpty('street');
-
-        $validator
-            ->scalar('number')
-            ->allowEmpty('number');
-
-        $validator
-            ->scalar('zip')
-            ->allowEmpty('zip');
-
-        $validator
-            ->scalar('city')
-            ->allowEmpty('city');
-
-        $validator
-            ->boolean('push_allowed')
-            ->requirePresence('push_allowed', 'create')
-            ->notEmpty('push_allowed');
-
-        $validator
-            ->dateTime('lastlogin')
-            ->requirePresence('lastlogin', 'create')
-            ->notEmpty('lastlogin');
-
-        $validator
-            ->scalar('forgot')
-            ->requirePresence('forgot', 'create')
-            ->notEmpty('forgot');
-
-        $validator
-            ->boolean('deleted')
-            ->requirePresence('deleted', 'create')
-            ->notEmpty('deleted');
-
-        $validator
-            ->scalar('invite')
-            ->allowEmpty('invite');
-
-        $validator
-            ->boolean('agreed')
-            ->requirePresence('agreed', 'create')
-            ->notEmpty('agreed');
-
-        $validator
-            ->dateTime('agreed_date')
-            ->allowEmpty('agreed_date');
-
-        $validator
-            ->boolean('confirmed')
-            ->requirePresence('confirmed', 'create')
-            ->notEmpty('confirmed');
 
         return $validator;
     }
@@ -159,10 +85,45 @@ class UsersTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
-    {
+    public function buildRules(RulesChecker $rules) {
         $rules->add($rules->isUnique(['email']));
 
         return $rules;
+    }
+
+
+    /**
+     * @param Event $event
+     * @return bool
+     */
+    public function beforeSave(Event $event) {
+        $entity = $event->data['entity'];
+        // Make a password for digest auth.
+        if ($entity->isNew() == true || $entity->setnewpassword == true) {
+            $entity->password = DigestAuthenticate::password(
+                $entity->email, $entity->password, 'EAP'
+            );
+
+            return true;
+        }
+    }
+
+
+    /**
+     * @param $data
+     *
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function findLoginUser($data) {
+        return $this->find()
+            ->where([
+                'Users.email' => $data['email'],
+                'password' => $data['password'],
+                'Users.active' => true
+            ])
+            ->contain([
+                'Projects'
+            ])
+            ->first();
     }
 }

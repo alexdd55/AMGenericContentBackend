@@ -18,6 +18,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 
 /**
  * Application Controller
@@ -43,14 +44,35 @@ class AppController extends Controller {
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-
+        $this->loadComponent('Auth', [
+            'loginAction' => [
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+            'authError' => 'Your session timed out.',
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'email',
+                        'password' => 'password'
+                    ],
+                    'userModel' => 'Users'
+                ]
+            ],
+            'loginRedirect' => [
+                'controller' => 'Users',
+                'action' => 'dashboard'
+            ],
+            'storage' => 'Session'
+        ]);
         /*
-         * Enable the following components for recommended CakePHP security settings.
-         * see https://book.cakephp.org/3.0/en/controllers/components/security.html
-         */
+                  * Enable the following components for recommended CakePHP security settings.
+                  * see https://book.cakephp.org/3.0/en/controllers/components/security.html
+                  */
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
     }
+
 
     /**
      * Before render callback.
@@ -66,13 +88,34 @@ class AppController extends Controller {
         // Note: These defaults are just to get started quickly with development
         // and should not be used in production. You should instead set "_serialize"
         // in each action as required.
-        if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->withType( [
+        if (!array_key_exists('_serialize', $this->viewVars) && in_array($this->response->getType(), [
                 'application/json',
                 'application/xml'
             ])
-        )) {
+        ) {
             $this->set('_serialize', true);
+        } else {
+            if ($this->Auth) {
+                $this->set('authdata', $this->Auth->user());
+                $Projects = TableRegistry::get('Projects');
+                $this->set('projectstructure', $Projects->getProjectStructure());
+            }
         }
     }
+
+    /**
+     * @param null $user
+     * @return bool
+     */
+
+    public function isAuthorized($user) {
+// Any registered user can access public functions
+        if (empty($this->request->params['prefix'])) {
+            return true;
+        }
+
+// Default deny
+        return false;
+    }
+
 }

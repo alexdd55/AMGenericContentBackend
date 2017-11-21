@@ -72,5 +72,15 @@ class ProjectsTable extends AppTable {
         return $validator;
     }
 
+    public function getProjectStructure($user_role_id = null) {
+        $results = $this->find()
+            ->where([
+
+            ])
+            ->contain(['Models'])
+            ->toArray();
+        return $results;
+    }
+
 
 }

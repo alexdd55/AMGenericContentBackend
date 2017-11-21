@@ -218,10 +218,10 @@ if (Configure::read('debug')) {
 Plugin::load('AdminLTE', ['bootstrap' => true, 'routes' => true]);
 
 Configure::write('Theme', [
-    'title' => 'Generic Content Engineering',
+    'title' => 'Generic Content Backend',
     'logo' => [
-        'mini' => '<b>G</b>CE',
-        'large' => '<b>Generic </b>CE'
+        'mini' => '<b>AM</b>GCB',
+        'large' => '<b>AM</b>GCB'
     ],
     'folder' => ROOT,
     'skin' => 'blue'
